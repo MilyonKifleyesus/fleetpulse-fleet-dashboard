@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FleetPulse Admin - User Management &amp; Analytics</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=Noto+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#13ec5b",
+              "primary-hover": "#0fb847",
+              "background-light": "#f6f8f6",
+              "background-dark": "#111813",
+              "surface-dark": "#1c261f",
+              "surface-border": "#3b5443",
+              "text-secondary": "#9db9a6",
+            },
+            fontFamily: {
+              "display": ['Inter', "Noto Sans", "sans-serif"],
+              "body": ['Inter', "Noto Sans", "sans-serif"],
+            },
+            borderRadius: {
+                "DEFAULT": "0.5rem", 
+                "lg": "1rem", 
+                "xl": "1.5rem", 
+                "2xl": "2rem",
+                "full": "9999px"
+            },
+            boxShadow: {
+                "glow": "0 0 15px rgba(19, 236, 91, 0.15)",
+                "glow-hover": "0 0 20px rgba(19, 236, 91, 0.3)",
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom scrollbar for a cleaner dark look */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #111813; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #3b5443; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4a6854; 
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white antialiased selection:bg-primary selection:text-black">
+<div class="flex h-screen w-full overflow-hidden">
+<!-- Sidebar -->
+<aside class="flex w-72 flex-col justify-between border-r border-surface-border bg-background-dark px-4 py-6 hidden lg:flex">
+<div class="flex flex-col gap-8">
+<!-- Brand -->
+<div class="flex items-center gap-3 px-2">
+<div class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-green-800 shadow-glow">
+<span class="material-symbols-outlined text-black font-bold text-2xl">bolt</span>
+</div>
+<div>
+<h1 class="font-display text-lg font-bold text-white tracking-wide">FleetPulse</h1>
+<p class="text-xs font-medium text-primary tracking-widest uppercase">Admin v2.0</p>
+</div>
+</div>
+<!-- Navigation -->
+<nav class="flex flex-col gap-2">
+<a class="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-text-secondary transition-all hover:bg-surface-dark hover:text-white" href="#">
+<span class="material-symbols-outlined text-2xl group-hover:text-primary transition-colors">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-text-secondary transition-all hover:bg-surface-dark hover:text-white" href="#">
+<span class="material-symbols-outlined text-2xl group-hover:text-primary transition-colors">map</span>
+<span class="text-sm font-medium">Map View</span>
+</a>
+<a class="flex items-center gap-3 rounded-lg bg-primary/10 px-3 py-2.5 text-white shadow-glow border border-primary/20" href="#">
+<span class="material-symbols-outlined text-2xl text-primary font-fill">group</span>
+<span class="text-sm font-medium">Personnel</span>
+</a>
+<a class="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-text-secondary transition-all hover:bg-surface-dark hover:text-white" href="#">
+<span class="material-symbols-outlined text-2xl group-hover:text-primary transition-colors">directions_car</span>
+<span class="text-sm font-medium">Vehicles</span>
+</a>
+<a class="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-text-secondary transition-all hover:bg-surface-dark hover:text-white" href="#">
+<span class="material-symbols-outlined text-2xl group-hover:text-primary transition-colors">analytics</span>
+<span class="text-sm font-medium">Analytics</span>
+</a>
+<a class="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-text-secondary transition-all hover:bg-surface-dark hover:text-white" href="#">
+<span class="material-symbols-outlined text-2xl group-hover:text-primary transition-colors">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+</nav>
+</div>
+<!-- User Profile -->
+<div class="flex items-center gap-3 rounded-xl border border-surface-border bg-surface-dark p-3">
+<div class="h-10 w-10 overflow-hidden rounded-full border-2 border-primary/30" data-alt="Portrait of an administrator looking professional" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDmHTtkQZ4aN83kAwOtEEVBqLpFj-qoL1kV8VHaP9PJLfWxElJfXX_K1n1qKgIi84S3A99vBTJRem_uJ4UIbTTm7URpapa677TbC5II_0PyEQrpTXDgMlfaFMZhOBDR4cu4Ay1T9tWcgaA7bndYGON3HwIuuhTx8dUWhk01x1ayA8yaJgTy6YYGATznOw-2oTqVnjjuvIuuL6B8cI1cQWJOvFUrgX3JvAgMRO6L--4EhvCstmkCcwa2hzOT-TPTq5zZy5pq_CJlhnsC"); background-size: cover; background-position: center;'></div>
+<div class="flex flex-col">
+<p class="text-sm font-bold text-white">Marcus Ray</p>
+<p class="text-xs text-text-secondary">Sys Admin</p>
+</div>
+<button class="ml-auto text-text-secondary hover:text-white">
+<span class="material-symbols-outlined">logout</span>
+</button>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 overflow-y-auto bg-background-dark relative">
+<!-- Header Section -->
+<header class="sticky top-0 z-20 border-b border-surface-border bg-background-dark/80 px-6 py-5 backdrop-blur-md lg:px-10">
+<div class="mx-auto flex max-w-7xl flex-wrap items-end justify-between gap-4">
+<div class="flex flex-col gap-1">
+<h1 class="font-display text-3xl font-black text-white tracking-tight">System Personnel &amp; Analytics</h1>
+<p class="text-text-secondary text-sm font-normal">Real-time monitoring of fleet operator performance and system access control.</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 rounded-lg border border-surface-border bg-surface-dark px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary/20 hover:border-primary/50">
+<span class="material-symbols-outlined text-lg">download</span>
+                        Export Report
+                    </button>
+<button class="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-bold text-black shadow-glow transition-transform hover:scale-105 active:scale-95">
+<span class="material-symbols-outlined text-lg">person_add</span>
+                        Add User
+                    </button>
+</div>
+</div>
+</header>
+<div class="mx-auto flex max-w-7xl flex-col gap-8 px-6 py-8 lg:px-10">
+<!-- KPI Stats Row -->
+<section class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+<div class="group relative flex flex-col gap-1 rounded-xl border border-surface-border bg-surface-dark p-5 transition-all hover:border-primary/50 hover:shadow-glow">
+<div class="flex items-start justify-between">
+<p class="text-text-secondary text-sm font-medium">Total Active Drivers</p>
+<span class="material-symbols-outlined text-primary bg-primary/10 p-1.5 rounded-lg text-xl">directions_car</span>
+</div>
+<p class="text-3xl font-bold text-white">1,240</p>
+<div class="flex items-center gap-1 text-xs font-medium text-primary">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+<span>+12% vs last week</span>
+</div>
+</div>
+<div class="group relative flex flex-col gap-1 rounded-xl border border-surface-border bg-surface-dark p-5 transition-all hover:border-primary/50 hover:shadow-glow">
+<div class="flex items-start justify-between">
+<p class="text-text-secondary text-sm font-medium">System Efficiency</p>
+<span class="material-symbols-outlined text-primary bg-primary/10 p-1.5 rounded-lg text-xl">speed</span>
+</div>
+<p class="text-3xl font-bold text-white">94.2%</p>
+<div class="flex items-center gap-1 text-xs font-medium text-primary">
+<span class="material-symbols-outlined text-sm">trending_flat</span>
+<span>+0.4% stable</span>
+</div>
+</div>
+<div class="group relative flex flex-col gap-1 rounded-xl border border-surface-border bg-surface-dark p-5 transition-all hover:border-red-500/50 hover:shadow-[0_0_15px_rgba(239,68,68,0.15)]">
+<div class="flex items-start justify-between">
+<p class="text-text-secondary text-sm font-medium">Critical Alerts</p>
+<span class="material-symbols-outlined text-red-500 bg-red-500/10 p-1.5 rounded-lg text-xl">warning</span>
+</div>
+<p class="text-3xl font-bold text-white">3</p>
+<div class="flex items-center gap-1 text-xs font-medium text-text-secondary">
+<span class="text-red-400 font-bold">Action Required</span>
+</div>
+</div>
+</section>
+<!-- Charts Section -->
+<section class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+<!-- Task Velocity Chart -->
+<div class="flex flex-col rounded-xl border border-surface-border bg-surface-dark p-6 shadow-sm">
+<div class="mb-6 flex items-start justify-between">
+<div>
+<h3 class="text-base font-medium text-white">Task Velocity</h3>
+<p class="text-xs text-text-secondary">Completion rate over time</p>
+</div>
+<div class="flex items-center gap-2 rounded-full bg-background-dark px-3 py-1">
+<span class="h-2 w-2 rounded-full bg-primary animate-pulse"></span>
+<span class="text-xs font-bold text-white">High Velocity</span>
+</div>
+</div>
+<div class="relative h-48 w-full">
+<svg class="h-full w-full overflow-visible" preserveaspectratio="none" viewbox="0 0 400 150">
+<!-- Gradient Defs -->
+<defs>
+<lineargradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#13ec5b" stop-opacity="0.2"></stop>
+<stop offset="100%" stop-color="#13ec5b" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<!-- Grid Lines -->
+<line stroke="#3b5443" stroke-dasharray="4 4" stroke-width="1" x1="0" x2="400" y1="150" y2="150"></line>
+<line stroke="#3b5443" stroke-dasharray="4 4" stroke-width="1" x1="0" x2="400" y1="75" y2="75"></line>
+<line stroke="#3b5443" stroke-dasharray="4 4" stroke-width="1" x1="0" x2="400" y1="0" y2="0"></line>
+<!-- Area Path -->
+<path d="M0,120 C50,120 50,40 100,40 C150,40 150,90 200,90 C250,90 250,20 300,20 C350,20 350,60 400,60 L400,150 L0,150 Z" fill="url(#chartGradient)"></path>
+<!-- Line Path -->
+<path d="M0,120 C50,120 50,40 100,40 C150,40 150,90 200,90 C250,90 250,20 300,20 C350,20 350,60 400,60" fill="none" stroke="#13ec5b" stroke-linecap="round" stroke-width="3"></path>
+</svg>
+</div>
+<div class="mt-4 flex justify-between px-2 text-xs font-medium text-text-secondary">
+<span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+</div>
+</div>
+<!-- Activity Heatmap -->
+<div class="flex flex-col rounded-xl border border-surface-border bg-surface-dark p-6 shadow-sm">
+<div class="mb-6 flex items-start justify-between">
+<div>
+<h3 class="text-base font-medium text-white">Activity Heatmap</h3>
+<p class="text-xs text-text-secondary">Peak user login &amp; actions (30 Days)</p>
+</div>
+<div class="text-right">
+<p class="text-xl font-bold text-white">14:00</p>
+<p class="text-xs text-primary">Peak Time</p>
+</div>
+</div>
+<div class="grid h-full grid-cols-7 gap-1.5 self-center">
+<!-- Simulated Heatmap Grid -->
+<!-- Row 1 -->
+<div class="h-8 w-8 rounded-sm bg-primary/10"></div>
+<div class="h-8 w-8 rounded-sm bg-primary/30"></div>
+<div class="h-8 w-8 rounded-sm bg-primary/60"></div>
+<div class="h-8 w-8 rounded-sm bg-primary"></div>
+<div class="h-8 w-8 rounded-sm bg-primary/80"></div>
+<div class="h-8 w-8 rounded-sm bg-primary/20"></div>
+<div class="h-8 w-8 rounded-sm bg-primary/10"></div>
+<!-- Row 2 -->
+<div class="h-8 w-8 rounded-sm bg-primary/20"></div>
+<div class="h-8 w-8 rounded-sm bg-primary/50"></div>
+<div class="h-8 w-8 rounded-sm bg-primary"></div>
+<div class="h-8 w-8 rounded-sm bg-primary/90"></div>
+<div class="h-8 w-8 rounded-sm bg-primary/40"></div>
+<div class="h-8 w-8 rounded-sm bg-primary/10"></div>
+<div class="h-8 w-8 rounded-sm bg-primary/5"></div>
+<!-- Row 3 -->
+<div class="h-8 w-8 rounded-sm bg-primary/5"></div>
+<div class="h-8 w-8 rounded-sm bg-primary/20"></div>
+<div class="h-8 w-8 rounded-sm bg-primary/40"></div>
+<div class="h-8 w-8 rounded-sm bg-primary/60"></div>
+<div class="h-8 w-8 rounded-sm bg-primary/30"></div>
+<div class="h-8 w-8 rounded-sm bg-primary/10"></div>
+<div class="h-8 w-8 rounded-sm bg-surface-border"></div>
+</div>
+<div class="mt-4 flex w-full justify-between px-10 text-xs font-medium text-text-secondary">
+<span>Week 1</span><span>Week 2</span><span>Week 3</span><span>Week 4</span>
+</div>
+</div>
+</section>
+<!-- User Management Table Section -->
+<section class="flex flex-col rounded-xl border border-surface-border bg-surface-dark pb-6 shadow-sm">
+<!-- Toolbar -->
+<div class="flex flex-wrap items-center justify-between gap-4 border-b border-surface-border p-4">
+<!-- Search -->
+<div class="relative flex w-full max-w-md items-center">
+<span class="material-symbols-outlined absolute left-3 text-text-secondary">search</span>
+<input class="h-10 w-full rounded-lg border-none bg-background-dark pl-10 pr-4 text-sm text-white placeholder-text-secondary focus:ring-1 focus:ring-primary" placeholder="Search personnel by name, ID..." type="text"/>
+</div>
+<!-- Filters -->
+<div class="flex items-center gap-3">
+<div class="relative">
+<select class="h-10 appearance-none rounded-lg border-none bg-background-dark pl-4 pr-10 text-sm font-medium text-white focus:ring-1 focus:ring-primary">
+<option>All Roles</option>
+<option>Driver</option>
+<option>Dispatcher</option>
+<option>Admin</option>
+</select>
+<span class="material-symbols-outlined absolute right-2 top-2.5 pointer-events-none text-text-secondary text-lg">expand_more</span>
+</div>
+<div class="relative">
+<select class="h-10 appearance-none rounded-lg border-none bg-background-dark pl-4 pr-10 text-sm font-medium text-white focus:ring-1 focus:ring-primary">
+<option>Status: All</option>
+<option>Active</option>
+<option>Idle</option>
+<option>Offline</option>
+</select>
+<span class="material-symbols-outlined absolute right-2 top-2.5 pointer-events-none text-text-secondary text-lg">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Table -->
+<div class="w-full overflow-x-auto">
+<table class="w-full text-left text-sm text-text-secondary">
+<thead class="bg-background-dark/50 text-xs uppercase text-text-secondary font-semibold">
+<tr>
+<th class="px-6 py-4">User</th>
+<th class="px-6 py-4">Role</th>
+<th class="px-6 py-4">Status</th>
+<th class="px-6 py-4">Performance</th>
+<th class="px-6 py-4">Last Active</th>
+<th class="px-6 py-4 text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-border">
+<!-- Row 1 -->
+<tr class="group hover:bg-white/5 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="h-10 w-10 rounded-full bg-cover bg-center border border-surface-border" data-alt="Profile photo of Alex Varnell" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAA9GXn0wpBrKF-w5mmKuIY44AZb9UbW79nUzRljcC51zOOUxojG6gx9sM3Cr4BwmTHZVE_Grct1vrgZXyiW3JsE6s3EiU6YUX6tKY73T3fkiMDxot2WrL23IPrYnFCcmfm0Y2U343lKPQaqwyg_83SjpkafEUbZPNQgAebShfxtsjTTqonsslWeG7ydZYx4f3u-6KAgVzfx5IntkjGQVEMhrMkTTrX7A2NMrbCF7PeZzJSKSzHFwHCqBKGyOSYCdStnxMYivQLyt21");'></div>
+<div>
+<p class="font-bold text-white">Alex Varnell</p>
+<p class="text-xs">ID: FP-8821</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1 rounded bg-blue-500/10 px-2 py-1 text-xs font-medium text-blue-400 border border-blue-500/20">
+<span class="material-symbols-outlined text-[14px]">local_shipping</span>
+                                        Driver
+                                    </span>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-bold text-primary border border-primary/20">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+</span>
+                                        On Route
+                                    </span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="h-1.5 w-24 rounded-full bg-background-dark overflow-hidden">
+<div class="h-full w-[98%] rounded-full bg-primary shadow-[0_0_10px_#13ec5b]"></div>
+</div>
+<span class="font-mono text-white">98%</span>
+</div>
+</td>
+<td class="px-6 py-4 font-mono">2m ago</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="rounded-lg p-1.5 text-text-secondary hover:bg-primary hover:text-black transition-colors" title="Edit Profile">
+<span class="material-symbols-outlined text-xl">edit</span>
+</button>
+<button class="rounded-lg p-1.5 text-text-secondary hover:bg-red-500 hover:text-white transition-colors" title="Revoke Access">
+<span class="material-symbols-outlined text-xl">block</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="group hover:bg-white/5 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="h-10 w-10 rounded-full bg-cover bg-center border border-surface-border" data-alt="Profile photo of Sarah Jenkins" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDhQludVWpwwUnDtkWzaUXgtY7DY8RyeLqiJm18p5GiPe_5ltp8xR9WZoznfcHBEK45vDfurZcvR7KPx87WAh-qrCCCuURLh_hZ6hbAl7fPdt6uhfDzzHVvLzNmgz084k6NlLLT_Tj5wQnkjuebBV4dtn_hBRA7RJJFa7vIzdfoee8uSy2vPjRciWE9q3xzyHfL5kLF-CDqzvlHgv6idg81VpSKwJ17kGwTEKDA2cBvMgLCS_Wtju7HAbhlU92YoeICUwuPY7hhyCAu");'></div>
+<div>
+<p class="font-bold text-white">Sarah Jenkins</p>
+<p class="text-xs">ID: FP-9004</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1 rounded bg-purple-500/10 px-2 py-1 text-xs font-medium text-purple-400 border border-purple-500/20">
+<span class="material-symbols-outlined text-[14px]">headset_mic</span>
+                                        Dispatch
+                                    </span>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 rounded-full bg-surface-border/50 px-2.5 py-0.5 text-xs font-bold text-text-secondary border border-surface-border">
+<span class="h-2 w-2 rounded-full bg-text-secondary"></span>
+                                        Offline
+                                    </span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="h-1.5 w-24 rounded-full bg-background-dark overflow-hidden">
+<div class="h-full w-[88%] rounded-full bg-yellow-400"></div>
+</div>
+<span class="font-mono text-white">88%</span>
+</div>
+</td>
+<td class="px-6 py-4 font-mono">4h ago</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="rounded-lg p-1.5 text-text-secondary hover:bg-primary hover:text-black transition-colors">
+<span class="material-symbols-outlined text-xl">edit</span>
+</button>
+<button class="rounded-lg p-1.5 text-text-secondary hover:bg-red-500 hover:text-white transition-colors">
+<span class="material-symbols-outlined text-xl">block</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="group hover:bg-white/5 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="h-10 w-10 rounded-full bg-cover bg-center border border-surface-border" data-alt="Profile photo of David Chen" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDJo47WZ28z_rXe8sADIQYhFaSysfzD0hJd1eLU6lAL20QrrMRH3uRoa7QOz3w7GwyAgP9A4rBOugOuX5Xi-zS7atKnENCu0PuMc0WbeaFfjpdYu_n1_SXsyzx1TkPuP89AyH2VYtK9q7daKOoSdwWDHz8YBLsEz-a704xM9wL7wzJ0svRvGMjgh3_sPxEK_ZTBBfJ2qsuSEXWBFqBGeGfbEcuNsCZTSJ_Y1xzMybqUGtCKLdJybQsfpA5jMpQOxsNim4-WNznObQX5");'></div>
+<div>
+<p class="font-bold text-white">David Chen</p>
+<p class="text-xs">ID: FP-3421</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1 rounded bg-blue-500/10 px-2 py-1 text-xs font-medium text-blue-400 border border-blue-500/20">
+<span class="material-symbols-outlined text-[14px]">local_shipping</span>
+                                        Driver
+                                    </span>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 rounded-full bg-yellow-500/10 px-2.5 py-0.5 text-xs font-bold text-yellow-500 border border-yellow-500/20">
+<span class="h-2 w-2 rounded-full bg-yellow-500"></span>
+                                        Idle
+                                    </span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="h-1.5 w-24 rounded-full bg-background-dark overflow-hidden">
+<div class="h-full w-[92%] rounded-full bg-primary shadow-[0_0_10px_#13ec5b]"></div>
+</div>
+<span class="font-mono text-white">92%</span>
+</div>
+</td>
+<td class="px-6 py-4 font-mono">15m ago</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="rounded-lg p-1.5 text-text-secondary hover:bg-primary hover:text-black transition-colors">
+<span class="material-symbols-outlined text-xl">edit</span>
+</button>
+<button class="rounded-lg p-1.5 text-text-secondary hover:bg-red-500 hover:text-white transition-colors">
+<span class="material-symbols-outlined text-xl">block</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="group hover:bg-white/5 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="h-10 w-10 rounded-full bg-cover bg-center border border-surface-border" data-alt="Profile photo of Elena Rodriguez" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB5GuWEYZw2cx6yfbhP6KHjMzsvNMwwRC7EI0raEco30KU45uUAb2DIsJRE3sHAV3HdIXac46g_7u34GbxcrKs_NPMV_20ETDtMNA-TOCPWWq3YxaxNsNyUNhe_ycAt0ku-ydWdDm1vX6GoQnNLPv5on8VNnfYFFcSabI0kyp9xG9xiVyV_xAhiJT5o1PD4JFvD_sFyFyp8hyuKcT1oL2ByCdQ_2L7GbCkXPlbqJsypFByNvdN2AtCyLK_H7DA8hvhjFEVRkbJlbKWy");'></div>
+<div>
+<p class="font-bold text-white">Elena Rodriguez</p>
+<p class="text-xs">ID: FP-5592</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1 rounded bg-orange-500/10 px-2 py-1 text-xs font-medium text-orange-400 border border-orange-500/20">
+<span class="material-symbols-outlined text-[14px]">admin_panel_settings</span>
+                                        Admin
+                                    </span>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-bold text-primary border border-primary/20">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+</span>
+                                        Active
+                                    </span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="h-1.5 w-24 rounded-full bg-background-dark overflow-hidden">
+<div class="h-full w-[100%] rounded-full bg-primary shadow-[0_0_10px_#13ec5b]"></div>
+</div>
+<span class="font-mono text-white">100%</span>
+</div>
+</td>
+<td class="px-6 py-4 font-mono">1m ago</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="rounded-lg p-1.5 text-text-secondary hover:bg-primary hover:text-black transition-colors">
+<span class="material-symbols-outlined text-xl">edit</span>
+</button>
+<button class="rounded-lg p-1.5 text-text-secondary hover:bg-red-500 hover:text-white transition-colors">
+<span class="material-symbols-outlined text-xl">block</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="flex items-center justify-between px-6 pt-4">
+<p class="text-xs text-text-secondary">Showing 1-4 of 1,240 personnel</p>
+<div class="flex gap-2">
+<button class="flex h-8 w-8 items-center justify-center rounded-lg border border-surface-border text-text-secondary hover:bg-surface-border hover:text-white disabled:opacity-50">
+<span class="material-symbols-outlined text-sm">chevron_left</span>
+</button>
+<button class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-black font-bold">1</button>
+<button class="flex h-8 w-8 items-center justify-center rounded-lg border border-surface-border text-text-secondary hover:bg-surface-border hover:text-white">2</button>
+<button class="flex h-8 w-8 items-center justify-center rounded-lg border border-surface-border text-text-secondary hover:bg-surface-border hover:text-white">3</button>
+<span class="flex h-8 w-8 items-center justify-center text-text-secondary">...</span>
+<button class="flex h-8 w-8 items-center justify-center rounded-lg border border-surface-border text-text-secondary hover:bg-surface-border hover:text-white">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+</section>
+</div>
+</main>
+</div>
+</body></html>
